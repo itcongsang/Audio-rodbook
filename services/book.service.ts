@@ -5,13 +5,13 @@ import { db } from './firebase.service';
 import { Book } from 'models/book';
 import { Channel } from 'models/channel';
 import { of, BehaviorSubject, combineLatest, from, merge } from 'rxjs';
+import { uniq } from 'lodash';
 
-class BookAndChannel {
-  books: Book;
-  nameChannel: string;
+class BookAndChannel extends Book {
+  channelName:string;
   constructor(data: any = {}) {
-    this.books = data.books || null;
-    this.nameChannel = data.nameChannel || '';
+    super(data);
+    this.channelName = data.channelName || '';
   }
 }
 
@@ -48,20 +48,28 @@ function GetChanelName(object){
 function getAllBooks2() {
   return collection(db.collection('books').limit(12)).pipe(
     switchMap(books => {
-      const channelIds = books.map(v => v.data()['channelId']);
-      const books2 = books.map(v => v.data());
-      return combineLatest(of(books2), combineLatest(channelIds.map(channelId => {
-        collection(db.collection('channels').where('channelId', '==', channelId)).pipe(map(v => {
-          return v[0].data();
-        }))
-      })))
+      const channelIds = uniq(books.map(v => v.data()['channelId']));
+      console.log('id ', channelIds)
+      return combineLatest(
+        of(books),
+        combineLatest(
+          channelIds.map(channelId =>
+            collection(db.collection('channels').where('channelId', '==', channelId)).pipe(map(v => v[0]))
+          )
+        )
+      );
     }),
     map(([books, channels]) => {
+      
       return books.map(book => {
-        let ob=new BookAndChannel({books: book, nameChannel: channels})
-            return ob;
-      })
-      //return {books, channels};
+        const bookDoc = book.data();
+        const channel = (channels.find(o => o.data().channelId === bookDoc.channelId));
+
+        return new BookAndChannel({
+          ...bookDoc,
+          channelName: typeof channel === 'object' ? channel.data().name : '',
+        });
+      });
     })
   );
 }

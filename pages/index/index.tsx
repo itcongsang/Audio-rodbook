@@ -16,19 +16,19 @@ export const Home = () => {
         </div>
         <div className="row">
           {console.log(res)}
-            {/* {res.map((t, i) => {
+            {res.map((t, i) => {
             return (
               <div key={i} className="col-md-2 rs-pad mar-bot-25">
                 <Link href="#">
                   <a title="">
                       <div className="img-ct">
-                        <img src={t.book.coverUrl} className="img-responsive" />
+                        <img src={t.coverUrl} className="img-responsive" />
                       </div>
                       <div className="main-ct">
-                        <h3><a>{t.book.name}</a></h3>
-                        <span>{t.channels}</span>
+                        <h3><a>{t.name}</a></h3>
+                        <span>{t.channelName}</span>
                         <div>
-                          <span className="seen-count">{t.book.rating} lượt xem</span>
+                          <span className="seen-count">{t.rating} lượt xem</span>
                           <span>1 tuần trước</span>
                         </div>
                       </div>
@@ -37,7 +37,7 @@ export const Home = () => {
                   
                 </div>
             );
-          })} */}
+          })}
         
         </div>
       </div>

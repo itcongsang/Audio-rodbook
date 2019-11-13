@@ -5,7 +5,7 @@ import Link from "next/link";
 import Layout from 'components/global/layout';
 import { getAllBooks, getAllBooks2 } from 'services/book.service';
 import './styles.scss';
-
+//
 export const Home = () => {
     const res = useObservable(() => getAllBooks2(),[]);
     return (

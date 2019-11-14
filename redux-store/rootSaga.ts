@@ -1,7 +1,9 @@
 import postsSaga from './posts/sagas';
+import login from './login/sagas';
 /* new-imported-saga-goes-here */
 
 export default [
   postsSaga,
-  /* new-imported-saga-element-goes-here */
+  login,
+/* new-imported-saga-element-goes-here */
 ];

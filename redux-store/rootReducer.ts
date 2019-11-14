@@ -1,6 +1,7 @@
 import { combineReducers, Reducer, AnyAction } from 'redux';
 import { IStoreState } from './storeState';
 import posts from './posts/reducer';
+import login from './login/reducer';
 /* new-imported-reducer-goes-here */
 
 type StateComputedTypes = IStoreState[keyof IStoreState];
@@ -31,7 +32,8 @@ export const reducerPayloadDoableHelper = (
 
 const rootReducer: Reducer<IStoreState, AnyAction> = combineReducers<IStoreState>({
   posts,
-  /* new-tranformed-reducer-export-goes-here */
+  login,
+/* new-tranformed-reducer-export-goes-here */
 });
 
 export default rootReducer;

@@ -1,0 +1,10 @@
+export const DEFAULT_ACTION = 'DEFAULT_ACTION';
+
+//#region Reset doable for this state
+export const RESET_LOGIN_DOABLES = 'RESET_LOGIN_DOABLES';
+export const TOGGLE_LOGIN_BOOLEANABLE_STATE = 'TOGGLE_LOGIN_BOOLEANABLE_STATE';
+export const TOGGLE_LOGIN_ERRABLE_STATE = 'TOGGLE_LOGIN_ERRABLE_STATE';
+export const TOGGLE_LOGIN_SUCCESSIBLE_STATE = 'TOGGLE_LOGIN_SUCCESSIBLE_STATE';
+//#endregion
+
+/* new-constant-export-goes-here */

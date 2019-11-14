@@ -16,10 +16,12 @@
       {
         "name": "posts",
         "path": "posts"
+      },
+      {
+        "name": "login",
+        "path": "login"
       }
     ],
-    "stores": [
-      "Posts"
-    ]
+    "stores": ["Posts", "Login"]
   }
 }

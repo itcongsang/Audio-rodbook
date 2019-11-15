@@ -10,8 +10,9 @@ export class AuthenticationService {
     private readonly TOKEN_KEY = 'rodbook_access_token';
     // private readonly CURRENT_USER_KEY = 'current_user_key';
   
-    userData: Observable<firebase.User>;
-    user: User;
+    // userData: Observable<firebase.User>;            
+    // user: User;
+    userDataToken: Observable<{}>;
   
     private _isLogin = false;
     private _token = '';
@@ -25,43 +26,45 @@ export class AuthenticationService {
       //this.userData = authState;
   
       //step2
-      authState(auth)
+      this.userDataToken = authState(auth)
         .pipe(
           filter(user => user !== null),
           mergeMap(
             user => user.getIdToken(),
             (user, idToken) => ({ user, idToken })
           )
-        )
-        .subscribe(({ user, idToken }) => {
-          if (user) {
-            //gán dữ liệu user
-            this.user = new User({
-              uid: user.uid,
-              email: user.email,
-              displayName: user.displayName,
-              photoURL: user.photoURL,
-              emailVerified: user.emailVerified
-            });
+        );
+
+        // dataAuth.subscribe(({ user, idToken }) => {
+        //   if (user) {
+        //     //gán dữ liệu user
+        //     this.user = new User({
+        //       uid: user.uid,
+        //       email: user.email,
+        //       displayName: user.displayName,
+        //       photoURL: user.photoURL,
+        //       emailVerified: user.emailVerified
+        //     });
+        //     console.log(user);
   
-            //tại sao lại có thể gán dc
-            this.setCookieToken(idToken);
-            this._token = idToken;
-            this._isLogin = true;
-          } else {
-          }
-        });
+        //     //tại sao lại có thể gán dc
+        //     this.setCookieToken(idToken);
+        //     this._token = idToken;
+        //     this._isLogin = true;
+        //   } else {
+        //   }
+        // });
     }
   
-    //lấy trạng thái login
-    get isLogin(): boolean {
-      return this._isLogin;
-    }
+    // //lấy trạng thái login
+    // get isLogin(): boolean {
+    //   return this._isLogin;
+    // }
   
-    //lấy token
-    get token(): string {
-      return this._token;
-    }
+    // //lấy token
+    // get token(): string {
+    //   return this._token;
+    // }
   
   
     //hàm Đăng nhập (Lấy dữ liệu data)
@@ -81,13 +84,13 @@ export class AuthenticationService {
         this.setCookieToken(idToken);
         
         //set user data
-        this.user = new User({
-          uid: res.user.uid,
-          email: res.user.email,
-          displayName: res.user.displayName,
-          photoURL: res.user.photoURL,
-          emailVerified: res.user.emailVerified
-        });
+        // this.user = new User({
+        //   uid: res.user.uid,
+        //   email: res.user.email,
+        //   displayName: res.user.displayName,
+        //   photoURL: res.user.photoURL,
+        //   emailVerified: res.user.emailVerified
+        // });
   
         //gán trạng thái đăng nhập
         this._token = idToken;

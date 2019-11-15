@@ -38,6 +38,7 @@ const MainLayout: React.SFC<Props> = ({
   const { asPath } = router;
   const [isShow, setIsShow] = useState(false);
   const [visible, setShowModal] = useState(false);
+  const [user, setuser] = useState({});
   
   const authenticate = new AuthenticationService();
 
@@ -82,10 +83,16 @@ const MainLayout: React.SFC<Props> = ({
   //end login show
 
   useEffect(() => {
-    if(authenticate.isLogin === true && authenticate.token !== ''){
-     console.log('login');
-     setIsLogin(true);
-    }
+    // if(authenticate.isLogin === true && authenticate.token !== ''){
+    //  console.log('login' + authenticate.user);
+    //  //setIsLogin(true);
+    // }
+    authenticate.userDataToken.subscribe(val => {
+      console.log(val);
+      
+      setuser(val);
+    });
+
     // window.addEventListener("scroll", handleScroll);
     // return () => {
     //   window.removeEventListener("scroll", handleScroll);
@@ -100,10 +107,10 @@ const MainLayout: React.SFC<Props> = ({
       <Layout className="layout">
       <HeaderTop clickShow={showClick} clickShowModal={showModal}/>
       <div className="main-center">
-          <MenuLeft asPath={asPath} isShow={isShow} isLogin={isLogin}/>
+          <MenuLeft asPath={asPath} isShow={isShow} />
           <div className={(asPath=="/listen"?"mar-top-56":"right-body mar-top-56") + " " + (isShow?"right-mini":"")}>
             <div className="">
-            <LoginContext.Provider value={{ isLogin }}>
+            <LoginContext.Provider value={{isLogin: user['user'].email != ''}}>
               {children}
             </LoginContext.Provider>
             </div>

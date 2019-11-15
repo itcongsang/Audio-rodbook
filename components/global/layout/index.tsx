@@ -12,8 +12,9 @@ import HeaderTop from './menuTop';
 import MenuLeft from './menuLeft';
 import 'bootstrap/dist/css/bootstrap.css';
 import { AuthenticationService } from 'services/login.service';
-import Router from 'next/router'
+import Router from 'next/router';
 import Link from 'next/link';
+import { User } from 'models/user';
 
 
 // const { Header, Content, Footer } = Layout;
@@ -41,7 +42,11 @@ const MainLayout: React.SFC<Props> = ({
   const { asPath } = router;
   const [isShow, setIsShow] = useState(false);
   const [visible, setShowModal] = useState(false);
-  const [user, setuser] = useState({});
+  const [user, setuser] = useState({
+    user: new User(),
+    idToken: ''
+  });
+  const [isLogin, setisLogin] = useState(false);
   
   const authenticate = new AuthenticationService();
 
@@ -90,17 +95,30 @@ const MainLayout: React.SFC<Props> = ({
     //  console.log('login' + authenticate.user);
     //  //setIsLogin(true);
     // }
-    authenticate.userDataToken.subscribe(val => {
-      console.log(val);
+    //console.log(user);
+    const sub = authenticate.userDataToken.subscribe(val => {
+      // console.log(val);
       
-      setuser(val);
+      setuser({
+        user: val.user,
+        idToken: val.idToken
+      });
+      //console.log(user);
     });
+    authenticate.loadToken();
+    //console.log('authenticate._isLogin ' + authenticate._isLogin);
+    //console.log(user.user)
+    if(authenticate._isLogin === true && user.user.uid !== ''){
+      setisLogin(true);
+      //console.log('isLogin ok')
+    }
 
     // window.addEventListener("scroll", handleScroll);
-    // return () => {
-    //   window.removeEventListener("scroll", handleScroll);
-    // };
-  }, []);
+    return () => {
+      // window.removeEventListener("scroll", handleScroll);
+      sub.unsubscribe();
+    };
+  }, [user]);
 
 
   return (
@@ -110,10 +128,10 @@ const MainLayout: React.SFC<Props> = ({
       <Layout className="layout">
       <HeaderTop clickShow={showClick} clickShowModal={showModal}/>
       <div className="main-center">
-          <MenuLeft asPath={asPath} isShow={isShow} />
+          <MenuLeft asPath={asPath} isShow={isShow} isLogin={isLogin}/>
           <div className={(asPath=="/listen"?"mar-top-56":"right-body mar-top-56") + " " + (isShow?"right-mini":"")}>
             <div className="">
-            <LoginContext.Provider value={{isLogin: user['user'].email != ''}}>
+            <LoginContext.Provider value={{ isLogin: true }}>
               {children}
             </LoginContext.Provider>
             </div>

@@ -2,19 +2,19 @@ import { Observable } from 'rxjs';
 import * as Cookies from 'js-cookie';
 // import { AngularFireAuth } from '@angular/fire/auth';
 import { User } from 'models/user';
-import { mergeMap, filter } from 'rxjs/operators';
+import { mergeMap, filter, map } from 'rxjs/operators';
 import { authState } from 'rxfire/auth';
 import { db, auth } from './firebase.service';
 
 export class AuthenticationService {
-    private readonly TOKEN_KEY = 'rodbook_access_token';
     // private readonly CURRENT_USER_KEY = 'current_user_key';
   
     // userData: Observable<firebase.User>;            
     // user: User;
-    userDataToken: Observable<{}>;
+    userDataToken: Observable<{user: User, idToken: string}>;
+    private readonly TOKEN_KEY = 'rodbook_access_token';
   
-    private _isLogin = false;
+    _isLogin = false;
     private _token = '';
   
     constructor(
@@ -33,7 +33,20 @@ export class AuthenticationService {
             user => user.getIdToken(),
             (user, idToken) => ({ user, idToken })
           )
-        );
+        ).pipe(map(val => {
+          const idToken = val.idToken;
+          const user = new User({
+            uid: val.user.uid,
+            email: val.user.email,
+            displayName: val.user.displayName,
+            photoURL: val.user.photoURL,
+            emailVerified: val.user.emailVerified
+          });
+          return {
+            user,
+            idToken
+          }
+        }))
 
         // dataAuth.subscribe(({ user, idToken }) => {
         //   if (user) {
@@ -131,7 +144,7 @@ export class AuthenticationService {
     }
   
     //step 1: kiểm tra trạng thái login 
-    private loadToken() {
+    loadToken() {
       const token = Cookies.get(this.TOKEN_KEY) || ''; //boolen
       if (token) {
         //nếu token=true thì gán token

@@ -9,7 +9,7 @@ import { LoginContext } from 'components/global/layout/index';
 //
 export const Home = () => {
     let isLogin = useContext(LoginContext);
-    console.log(isLogin);
+    console.log('is login home ' + isLogin.isLogin);
     const resGoiY = useObservable(() => getAllBooks2(),[]);
     const resDeXuat = useObservable(() => getBooksRecommended(),[]);
     // useEffect(() => {

@@ -459,3 +459,36 @@ body
 .login-form-button {
   width: 100%;
 }
+.box-social
+{
+  text-align: center;
+}
+.box-social a
+{
+    display: block;
+    color: #fff !important;
+    background: #18308a;
+    /* margin-bottom: 20px; */
+    max-width: 243px;
+    margin: auto;
+    margin-bottom: 20px;
+    padding: 16px 14px;
+    position: relative;
+    font-size: 15px;
+    border-radius: 5px;
+    border: 1px solid #0c1e65;
+}
+.box-social a svg
+{
+  float: left;
+    margin-top: 3px;
+}
+.red-back
+{
+  background: red !important;
+  border: 1px solid red !important;
+}
+.box-social a:hover
+{
+    opacity: 0.8;
+}

@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react';
 import Layout from 'components/global/layout';
 import './styles.scss';
-import { loginFirebase } from 'services/login.service';
+import { AuthenticationService } from 'services/login.service';
 import Router from 'next/router'
 
 
@@ -18,7 +18,9 @@ export const Login = () => {
 
   }
   const Login = () => {
-    loginFirebase(state.email, state.password, Redirect);
+    const a = new AuthenticationService();
+    a.loginFirebase(state.email, state.password, Redirect);
+    // loginFirebase(state.email, state.password, Redirect);
   }
   function Redirect(){
     return Router.push('/');

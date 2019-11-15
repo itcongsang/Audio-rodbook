@@ -9,6 +9,7 @@ import '../../../styles/main.scss';
 import HeaderTop from './menuTop';
 import MenuLeft from './menuLeft';
 import 'bootstrap/dist/css/bootstrap.css';
+import { AuthenticationService } from 'services/login.service';
 
 
 
@@ -36,12 +37,16 @@ const MainLayout: React.SFC<Props> = ({
 }) => {
   const { asPath } = router;
   const [isShow, setIsShow] = useState(false);
+  const authenticate = new AuthenticationService();
 
   const showClick=()=>{
     setIsShow(isShow?false:true);
   }
 
   useEffect(() => {
+    if(authenticate.isLogin === true && authenticate.token !== ''){
+     console.log('login');
+    }
     // window.addEventListener("scroll", handleScroll);
     // return () => {
     //   window.removeEventListener("scroll", handleScroll);

@@ -1,11 +1,13 @@
 import Link from "next/link";
-import { FaHome, FaHotjar, FaBookMedical, FaFolder, FaHistory, FaHourglassEnd, FaIndent, FaBookOpen } from 'react-icons/fa';
+import { FaHome, FaHotjar, FaBookMedical, FaFolder, FaHistory, FaHourglassEnd, FaIndent, FaBookOpen, FaKickstarterK, FaShoppingCart, FaRegCopyright } from 'react-icons/fa';
+import { MdLiveTv, MdSettings, MdHelp, MdReport } from 'react-icons/md';
 import React from "react";
 interface Props {
     readonly asPath?: string;
     readonly isShow?: boolean;
+    readonly isLogin?: boolean;
   }
-const MenuLeft: React.SFC<Props> = ({asPath, isShow}) => {
+const MenuLeft: React.SFC<Props> = ({asPath, isShow, isLogin}) => {
     let show=isShow?"pin-show":"";
     let path=(asPath=="/listen"?"hide on-left":"on-left") + " " +show;
     return (
@@ -28,6 +30,7 @@ const MenuLeft: React.SFC<Props> = ({asPath, isShow}) => {
                         </Link>
                     </li>
                 </ul>
+                {isLogin && 
                 <ul className="non-ul ul-mn">
                     <li>
                         <Link href="/listen">
@@ -55,6 +58,52 @@ const MenuLeft: React.SFC<Props> = ({asPath, isShow}) => {
                         </Link>
                     </li>
                 </ul>
+                }
+                {isLogin && 
+                <ul className="non-ul ul-mn">
+                    <span>KÊNH ĐÃ ĐĂNG KÝ</span>
+                    <li>
+                        <Link href="/">
+                            <a title="Kênh 1"><FaKickstarterK />Kênh 1</a>
+                        </Link>
+                    </li>
+                </ul>
+                }
+                {isLogin && 
+                <ul className="non-ul ul-mn">
+                    <span>DỊCH VỤ</span>
+                    <li>
+                        <Link href="/">
+                            <a title="Mua gói nghe sách"><FaShoppingCart />Mua gói nghe sách</a>
+                        </Link>
+                    </li>
+                    <li>
+                        <Link href="/">
+                            <a title="Live radio"><MdLiveTv />Live radio</a>
+                        </Link>
+                    </li>
+                    <li>
+                        <Link href="/">
+                            <a title="Cài đặt"><MdSettings />Cài đặt</a>
+                        </Link>
+                    </li>
+                    <li>
+                        <Link href="/">
+                            <a title="Trợ giúp"><MdHelp />Trợ giúp</a>
+                        </Link>
+                    </li>
+                    <li>
+                        <Link href="/">
+                            <a title="Báo cáo"><MdReport />Báo cáo</a>
+                        </Link>
+                    </li>
+                    <li>
+                        <Link href="/">
+                            <a title="Bản quyền"><FaRegCopyright />Bản quyền</a>
+                        </Link>
+                    </li>
+                </ul>
+                }
             </div>
             <div className="bot-audio">
                 audio book @{new Date().getFullYear()} Created by

@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useContext } from 'react';
 
 import { Layout, Modal, Form, Input, Icon, Checkbox, Button } from 'antd';
+import { FaFacebookF, FaGoogle }  from 'react-icons/fa';
+
 import Head from './head';
 // import {CustomNProgress} from 'components';
 import { compose } from 'recompose';
@@ -11,6 +13,7 @@ import MenuLeft from './menuLeft';
 import 'bootstrap/dist/css/bootstrap.css';
 import { AuthenticationService } from 'services/login.service';
 import Router from 'next/router'
+import Link from 'next/link';
 
 
 // const { Header, Content, Footer } = Layout;
@@ -123,32 +126,56 @@ const MainLayout: React.SFC<Props> = ({
           onOk={handleOk}
           onCancel={handleCancel}
           footer={null}
+          width={800}
         >
-          <Form>
-            <Form.Item>
-              <Input
-                prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                placeholder="Nhập Username"
-                onChange={handleChange}
-              />
-            </Form.Item>
-            <Form.Item>
-              <Input
-                prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                placeholder="Nhập Password"
-                onChange={handleChange}
-                type="password"
-              />
-            </Form.Item>
-            <Form.Item>
-              <Checkbox>Ghi nhớ tài khoản</Checkbox>
-              <a className="login-form-forgot" href=""></a>
-              <Button type="primary" htmlType="button" className="login-form-button" onClick={Login}>
-                  Đăng nhập
-              </Button>
-                Hoặc <a href=""> Đăng ký ngay!</a>
-            </Form.Item>
-          </Form>
+          <div className="container">
+            <div className="row">
+              <div className="col-md-6">
+              <Form>
+                <Form.Item>
+                  <Input
+                    prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                    placeholder="Nhập Username"
+                    onChange={handleChange}
+                  />
+                </Form.Item>
+                <Form.Item>
+                  <Input
+                    prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                    placeholder="Nhập Password"
+                    onChange={handleChange}
+                    type="password"
+                  />
+                </Form.Item>
+                <Form.Item>
+                  <Checkbox>Ghi nhớ tài khoản</Checkbox>
+                  <a className="login-form-forgot" href=""></a>
+                  <Button type="primary" htmlType="button" className="login-form-button" onClick={Login}>
+                      Đăng nhập
+                  </Button>
+                    Hoặc <a href=""> Đăng ký ngay!</a>
+                </Form.Item>
+              </Form>
+              </div>
+              <div className="col-md-6">
+                  <div className="box-social">
+                      <Link>
+                          <a>
+                            <FaFacebookF />
+                            Đăng nhập bằng Facebook
+                          </a>
+                      </Link>
+
+                      <Link>
+                          <a className="red-back">
+                            <FaGoogle />
+                            Đăng nhập bằng Google
+                          </a>
+                      </Link>
+                  </div>
+              </div>
+            </div>
+          </div>
         </Modal>
     </>
   );

@@ -432,3 +432,30 @@ body
 {
   width: calc(100% - 95px);
 }
+.login-button
+{
+  border: 1px solid #335fd4;
+    color: #335fd4;
+    padding: 7px 10px;
+    font-size: 14px;
+    margin-top: 8px;
+    font-weight: 600;
+    position: relative;
+    cursor: pointer;
+  
+}
+.login-button svg
+{
+  font-size: 20px;
+    float: left;
+    margin-right: 8px;
+}
+.login-form {
+  max-width: 300px;
+}
+.login-form-forgot {
+  float: right;
+}
+.login-form-button {
+  width: 100%;
+}

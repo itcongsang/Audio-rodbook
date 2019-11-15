@@ -87,7 +87,7 @@ const MainLayout: React.SFC<Props> = ({
   useEffect(() => {
     if(authenticate.isLogin === true && authenticate.token !== ''){
      console.log('login');
-     setIsLogin(true);
+    //  setIsLogin(true);
     }
     // window.addEventListener("scroll", handleScroll);
     // return () => {
@@ -103,10 +103,10 @@ const MainLayout: React.SFC<Props> = ({
       <Layout className="layout">
       <HeaderTop clickShow={showClick} clickShowModal={showModal}/>
       <div className="main-center">
-          <MenuLeft asPath={asPath} isShow={isShow} isLogin={isLogin}/>
+          <MenuLeft asPath={asPath} isShow={isShow} isLogin={true}/>
           <div className={(asPath=="/listen"?"mar-top-56":"right-body mar-top-56") + " " + (isShow?"right-mini":"")}>
             <div className="">
-            <LoginContext.Provider value={{ isLogin }}>
+            <LoginContext.Provider value={{ isLogin: false }}>
               {children}
             </LoginContext.Provider>
             </div>

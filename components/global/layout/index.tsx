@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 
 import { Layout, Modal, Form, Input, Icon, Checkbox, Button } from 'antd';
 import { FaFacebookF, FaGoogle }  from 'react-icons/fa';
@@ -16,9 +16,6 @@ import Router from 'next/router'
 import Link from 'next/link';
 
 
-
-
-
 // const { Header, Content, Footer } = Layout;
 // const MenuItem = Menu.Item;
 
@@ -31,6 +28,7 @@ interface Props extends React.HTMLAttributes<any> {
 }
 
 // const activeClass = 'ant-menu-item-selected';
+export const LoginContext = React.createContext({isLogin: false});
 
 const MainLayout: React.SFC<Props> = ({
   title,
@@ -47,7 +45,7 @@ const MainLayout: React.SFC<Props> = ({
   const authenticate = new AuthenticationService();
 
   const showClick=()=>{
-    setIsShow(isShow?false:true);
+    setIsShow(isShow ? false : true);
   }
 
   //Modal Show
@@ -89,6 +87,7 @@ const MainLayout: React.SFC<Props> = ({
   useEffect(() => {
     if(authenticate.isLogin === true && authenticate.token !== ''){
      console.log('login');
+     setIsLogin(true);
     }
     // window.addEventListener("scroll", handleScroll);
     // return () => {
@@ -104,10 +103,12 @@ const MainLayout: React.SFC<Props> = ({
       <Layout className="layout">
       <HeaderTop clickShow={showClick} clickShowModal={showModal}/>
       <div className="main-center">
-          <MenuLeft asPath={asPath} isShow={isShow}/>
+          <MenuLeft asPath={asPath} isShow={isShow} isLogin={isLogin}/>
           <div className={(asPath=="/listen"?"mar-top-56":"right-body mar-top-56") + " " + (isShow?"right-mini":"")}>
             <div className="">
+            <LoginContext.Provider value={{ isLogin }}>
               {children}
+            </LoginContext.Provider>
             </div>
           </div>
         </div>

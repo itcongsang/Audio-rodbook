@@ -8,7 +8,6 @@ import { db, auth, authProvider } from './firebase.service';
 
 export class AuthenticationService {
     // private readonly CURRENT_USER_KEY = 'current_user_key';
-  
     // userData: Observable<firebase.User>;            
     // user: User;
     userDataToken: Observable<{user: User, idToken: string}>;
@@ -18,7 +17,6 @@ export class AuthenticationService {
     facebookProvider = new authProvider.FacebookAuthProvider();
     private readonly TOKEN_KEY = 'rodbook_access_token';
     private _token = '';
-
     constructor() {
       this.loadToken();
       //dữ liệu về user
@@ -108,7 +106,7 @@ export class AuthenticationService {
         return false;
       }
     }
-    async loginWithGoogle(){
+    async loginWithGoogle() {
       try {
         const res = await auth.signInWithPopup(this.googleProvider);
         //(res success)=> get idtoken
@@ -123,7 +121,29 @@ export class AuthenticationService {
         return false;
       }
     }
-    async loginWithFacebook(){
+    async loginWithGoogleRedirect(){
+        await auth.signInWithRedirect(this.googleProvider);
+        auth.getRedirectResult().then(async (result) => {
+          if (result.credential) {
+            // This gives you a Google Access Token. You can use it to access the Google API.
+            const idToken = await result.user.getIdToken(true);
+            this.setCookieToken(idToken);
+            this._token = idToken;
+            this._isLogin = true;
+            console.log('loginWithGoogleRedirect ' + result.user.email);
+            return true;
+          }
+          // The signed-in user info.
+          //var user = result.user;
+        }).catch((error) => {
+          console.log('Something is wrong:', error.message);
+          return false;
+        });
+        //Đang nghiên cứu áp dụng serviceWorker
+        // Có thể dùng cookie của google có sẵn trong firebase, cũng tiện lợi
+        //navigator.serviceWorker.
+    }
+    async loginWithFacebook() {
       try {
         const res = await auth.signInWithPopup(this.facebookProvider);
         //(res success)=> get idtoken
@@ -137,6 +157,19 @@ export class AuthenticationService {
         console.log('Something is wrong:', error.message);
         return false;
       }
+    }
+    //đăng nhập có ghi nhớ tài khoản
+    //khi dùng hàm này thì khi đóng web thì mọi trạng thái đăng nhập bị mất
+    persistenceAccount(email, password){
+      auth.setPersistence(authProvider.Auth.Persistence.SESSION)
+        .then(() => {
+          // New sign-in will be persisted with session persistence.
+          return this.loginFirebase(email, password, null);
+        })
+        .catch((error) => {
+          console.log('Response create User Fail with ' + error);
+          return null;
+        });
     }
     logout() {
       Cookies.remove(this.TOKEN_KEY);

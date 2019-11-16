@@ -75,6 +75,7 @@ const MainLayout: React.SFC<Props> = ({
     password: ''
   });
   const handleChange = (e) => {
+    console.log(e.target);
     setstate({
       ...state,
       [e.target.name]: e.target.value
@@ -84,7 +85,8 @@ const MainLayout: React.SFC<Props> = ({
   const Login = () => {
     const a = new AuthenticationService();
     a.loginFirebase(state.email, state.password, Redirect);
-    // loginFirebase(state.email, state.password, Redirect);
+    //a.loginWithGoogleRedirect();
+    //a.persistenceAccount(state.email, state.password);
   }
   function Redirect(){
     return Router.push('/');
@@ -96,10 +98,9 @@ const MainLayout: React.SFC<Props> = ({
     //  console.log('login' + authenticate.user);
     //  //setIsLogin(true);
     // }
-    //console.log(user);
+    console.log(user);
     const sub = authenticate.userDataToken.subscribe(val => {
-      // console.log(val);
-      
+      //console.log(val);
       setuser({
         user: val.user,
         idToken: val.idToken
@@ -154,14 +155,14 @@ const MainLayout: React.SFC<Props> = ({
                 <Form.Item>
                   <Input
                     prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                    placeholder="Nhập Username"
+                    placeholder="Nhập Username" name="email"
                     onChange={handleChange}
                   />
                 </Form.Item>
                 <Form.Item>
                   <Input
                     prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                    placeholder="Nhập Password"
+                    placeholder="Nhập Password" name="password"
                     onChange={handleChange}
                     type="password"
                   />

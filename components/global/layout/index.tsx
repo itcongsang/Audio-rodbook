@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, Children } from 'react';
 
 import { Layout, Modal, Form, Input, Icon, Checkbox, Button } from 'antd';
 import { FaFacebookF, FaGoogle }  from 'react-icons/fa';
@@ -15,6 +15,7 @@ import { AuthenticationService } from 'services/login.service';
 import Router from 'next/router';
 import Link from 'next/link';
 import { User } from 'models/user';
+import { AuthProvider } from 'components/Session/auth-provider';
 
 
 // const { Header, Content, Footer } = Layout;
@@ -198,5 +199,13 @@ const MainLayout: React.SFC<Props> = ({
     </>
   );
 }
+// const Provider = () => {
+//   return (
+//     <AuthProvider>
+//       <div></div>>
+//     </AuthProvider>
+//   )
+// }
+// export default compose<Props, Props>(withRouter)(Provider);
 
 export default compose<Props, Props>(withRouter)(MainLayout);

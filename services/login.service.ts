@@ -4,7 +4,7 @@ import * as Cookies from 'js-cookie';
 import { User } from 'models/user';
 import { mergeMap, filter, map } from 'rxjs/operators';
 import { authState } from 'rxfire/auth';
-import { db, auth } from './firebase.service';
+import { db, auth, authProvider } from './firebase.service';
 
 export class AuthenticationService {
     // private readonly CURRENT_USER_KEY = 'current_user_key';
@@ -12,19 +12,17 @@ export class AuthenticationService {
     // userData: Observable<firebase.User>;            
     // user: User;
     userDataToken: Observable<{user: User, idToken: string}>;
-    private readonly TOKEN_KEY = 'rodbook_access_token';
   
     _isLogin = false;
+    googleProvider = new authProvider.GoogleAuthProvider();
+    facebookProvider = new authProvider.FacebookAuthProvider();
+    private readonly TOKEN_KEY = 'rodbook_access_token';
     private _token = '';
-  
-    constructor(
-      
-    ) {
+
+    constructor() {
       this.loadToken();
-  
       //dữ liệu về user
       //this.userData = authState;
-  
       //step2
       this.userDataToken = authState(auth)
         .pipe(
@@ -47,7 +45,8 @@ export class AuthenticationService {
             idToken
           }
         }))
-
+        //Cách này không hay, do lắng nghe ngay trong này, vậy làm sao gọi ra
+        //Chỉ nên truyền vào Obsẻvable và khi new CLass thì chúng ta lắng nghe Observable.
         // dataAuth.subscribe(({ user, idToken }) => {
         //   if (user) {
         //     //gán dữ liệu user
@@ -68,7 +67,7 @@ export class AuthenticationService {
         //   }
         // });
     }
-  
+    //Lắng nghe bên ngoài rồi thì cần chi 2 hàm này.
     // //lấy trạng thái login
     // get isLogin(): boolean {
     //   return this._isLogin;
@@ -78,24 +77,18 @@ export class AuthenticationService {
     // get token(): string {
     //   return this._token;
     // }
-  
-  
     //hàm Đăng nhập (Lấy dữ liệu data)
     async loginFirebase(email: string, password: string, Redirect) {
       try {
-  
         //gọi library dăng nhập
         const res = await auth.signInWithEmailAndPassword(
           email,
           password
         );
-  
         //(res success)=> get idtoken
         const idToken = await res.user.getIdToken(true);
-  
         //set token vào cookie
         this.setCookieToken(idToken);
-        
         //set user data
         // this.user = new User({
         //   uid: res.user.uid,
@@ -109,21 +102,48 @@ export class AuthenticationService {
         this._token = idToken;
         this._isLogin = true;
         Redirect();
-  
         return true;
       } catch (error) {
         console.log('Something is wrong:', error.message);
         return false;
       }
     }
-  
+    async loginWithGoogle(){
+      try {
+        const res = await auth.signInWithPopup(this.googleProvider);
+        //(res success)=> get idtoken
+        const idToken = await res.user.getIdToken(true);
+        //set token vào cookie
+        this.setCookieToken(idToken);
+        this._token = idToken;
+        this._isLogin = true;
+        return true;
+      } catch (error) {
+        console.log('Something is wrong:', error.message);
+        return false;
+      }
+    }
+    async loginWithFacebook(){
+      try {
+        const res = await auth.signInWithPopup(this.facebookProvider);
+        //(res success)=> get idtoken
+        const idToken = await res.user.getIdToken(true);
+        //set token vào cookie
+        this.setCookieToken(idToken);
+        this._token = idToken;
+        this._isLogin = true;
+        return true;
+      } catch (error) {
+        console.log('Something is wrong:', error.message);
+        return false;
+      }
+    }
     logout() {
       Cookies.remove(this.TOKEN_KEY);
       this._token = '';
       this._isLogin = false;
       auth.signOut();
     }
-  
     createAcc() {
       //rodbooks.com@gmail.com    khFD5yU1zNccJuB7oipl6NrOFR42
       auth.createUserWithEmailAndPassword(
@@ -131,18 +151,18 @@ export class AuthenticationService {
         'Rodbooks@114'
       );
     }
-    async createUser(email: string, password: string) {
+    async createUser(email: string, password: string, responseLogin) {
       try {
         const res = await auth.createUserWithEmailAndPassword(email, password);
         console.log('Response create New User', res);
+        //Trở về trang login, truyền vào 1 Redirect về trang chủ và show login popup
+        responseLogin();
         return res.user.uid;
-      }
-      catch (err) {
+      } catch (err) {
         console.log('Response create User Fail');
         return null;
       }
     }
-  
     //step 1: kiểm tra trạng thái login 
     loadToken() {
       const token = Cookies.get(this.TOKEN_KEY) || ''; //boolen
@@ -152,12 +172,10 @@ export class AuthenticationService {
         this._token = token;
         this._isLogin = true;
       } else {
-  
         this._token = '';
         this._isLogin = false;
       }
     }
-  
     //Dữ liệu token và thời gian suy trì đăng nhập đưa vào cookie
     private setCookieToken(token: string) {
       const dateExpires: Date = new Date(
@@ -169,7 +187,6 @@ export class AuthenticationService {
         expires: dateExpires
       });
     }
-  
     private getDomain() {
       const domain = document.domain;
       const domainParts = domain.split('.');
